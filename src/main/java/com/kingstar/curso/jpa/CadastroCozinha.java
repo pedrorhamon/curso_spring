@@ -19,6 +19,10 @@ public class CadastroCozinha {
 	public List<Cozinha> listar() {
 		return manager.createQuery("from Cozinha", Cozinha.class).getResultList();
 	}
+	
+	public Cozinha buscar(Long id) {
+		return manager.find(Cozinha.class, id);
+	}
 
 	@Transactional
 	public Cozinha adicionar(Cozinha cozinha) {
