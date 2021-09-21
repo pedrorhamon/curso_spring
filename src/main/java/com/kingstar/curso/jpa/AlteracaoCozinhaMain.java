@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import com.kingstar.curso.CursoApiApplication;
 import com.kingstar.curso.domain.entity.Cozinha;
 
-public class InclusaoCozinhaMain {
+public class AlteracaoCozinhaMain {
 
 	public static void main(String[] args) {
 		ApplicationContext appC = new SpringApplicationBuilder(CursoApiApplication.class).web(WebApplicationType.NONE)
@@ -16,9 +16,15 @@ public class InclusaoCozinhaMain {
 		CadastroCozinha cadastroCozinha = appC.getBean(CadastroCozinha.class);
 
 		Cozinha cozinha1 = new Cozinha();
-		cozinha1.setId(1L);
 		cozinha1.setNome("Brasileira");
 
-		cadastroCozinha.adicionar(cozinha1);
+		Cozinha cozinha2 = new Cozinha();
+		cozinha2.setNome("Mexicana");
+
+		cozinha1 = cadastroCozinha.adicionar(cozinha1);
+		cozinha2 = cadastroCozinha.adicionar(cozinha2);
+		
+		System.out.printf("%d - %s\n", cozinha1.getId(), cozinha1.getNome());
+		System.out.printf("%d - %s\n", cozinha2.getId(), cozinha2.getNome());
 	}
 }
