@@ -1,4 +1,4 @@
-package com.kingstar.curso.jpa;
+package com.kingstar.curso.infrastructure.repository;
 
 import java.util.List;
 
@@ -9,23 +9,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kingstar.curso.domain.entity.Cozinha;
+import com.kingstar.curso.domain.repository.CozinhaRepository;
 
 @Component
-public class CadastroCozinha {
+public class CozinhaRepositoryImpl implements CozinhaRepository{
 
 	@PersistenceContext
 	private EntityManager manager;
 
+	@Override
 	public List<Cozinha> listar() {
 		return manager.createQuery("from Cozinha", Cozinha.class).getResultList();
 	}
-	
+	@Override
 	public Cozinha buscar(Long id) {
 		return manager.find(Cozinha.class, id);
 	}
 
 	@Transactional
-	public Cozinha adicionar(Cozinha cozinha) {
+	public Cozinha salvar(Cozinha cozinha) {
 		return manager.merge(cozinha);
 	}
 	

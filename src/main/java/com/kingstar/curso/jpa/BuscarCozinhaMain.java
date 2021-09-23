@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.kingstar.curso.CursoApiApplication;
 import com.kingstar.curso.domain.entity.Cozinha;
+import com.kingstar.curso.domain.repository.CozinhaRepository;
 
 public class BuscarCozinhaMain {
 	
@@ -14,7 +15,7 @@ public class BuscarCozinhaMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CadastroCozinha cadastroCozinha = appC.getBean(CadastroCozinha.class);
+		CozinhaRepository cadastroCozinha = appC.getBean(CozinhaRepository.class);
 
 		Cozinha cozinha = cadastroCozinha.buscar(1L);
 
