@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,4 +22,7 @@ public class Restaurante {
 
 	@Column(name = "taxa_frente")
 	private BigDecimal taxaFrente;
+	
+	@ManyToOne
+	private Cozinha cozinha;
 }
