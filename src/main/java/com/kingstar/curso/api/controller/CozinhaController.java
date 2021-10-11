@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kingstar.curso.api.controller.model.CozinhasXmlWrapper;
 import com.kingstar.curso.domain.entity.Cozinha;
 import com.kingstar.curso.domain.repository.CozinhaRepository;
+import com.kingstar.curso.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping(value = "/cozinhas")
@@ -28,6 +29,9 @@ public class CozinhaController {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
+	@Autowired
+	private CadastroCozinhaService cozinhaService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Cozinha> listar() {
@@ -52,7 +56,7 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-		return cozinhaRepository.salvar(cozinha);
+		return cozinhaService.salvar(cozinha);
 	}
 
 	@PutMapping("/{cozinhaId}")
