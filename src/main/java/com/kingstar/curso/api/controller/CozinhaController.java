@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kingstar.curso.api.controller.model.CozinhasXmlWrapper;
 import com.kingstar.curso.domain.entity.Cozinha;
 import com.kingstar.curso.domain.exception.EntidadeEmUsoException;
 import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
@@ -37,11 +36,6 @@ public class CozinhaController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Cozinha> listar() {
 		return cozinhaRepository.listar();
-	}
-
-	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-	public CozinhasXmlWrapper listarXml() {
-		return new CozinhasXmlWrapper(cozinhaRepository.listar());
 	}
 
 	@GetMapping("/{cozinhaId}")
@@ -66,7 +60,8 @@ public class CozinhaController {
 
 		if (cozinhaAtual != null) {
 			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cozinhaRepository.salvar(cozinhaAtual);
+			
+			cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
 			return ResponseEntity.ok(cozinhaAtual);
 		}
 		return ResponseEntity.notFound().build();

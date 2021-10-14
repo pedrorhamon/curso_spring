@@ -12,7 +12,7 @@ import com.kingstar.curso.domain.entity.Estado;
 import com.kingstar.curso.domain.repository.EstadoRepository;
 
 @Component
-public class EstadoRepositoryImpl implements EstadoRepository{
+public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -21,19 +21,20 @@ public class EstadoRepositoryImpl implements EstadoRepository{
 	public List<Estado> listar() {
 		return manager.createQuery("from Estado", Estado.class).getResultList();
 	}
+
 	@Override
 	public Estado buscar(Long id) {
 		return manager.find(Estado.class, id);
 	}
 
 	@Transactional
-	public Estado salvar(Estado cozinha) {
-		return manager.merge(cozinha);
+	public Estado salvar(Estado estado) {
+		return manager.merge(estado);
 	}
-	
+
 	@Transactional
-	public void remover(Estado Estado) {
-		Estado = buscar(Estado.getId());
-		manager.remove(Estado);
+	public void remover(Long id) {
+		Estado estado = buscar(id);
+		manager.remove(estado);
 	}
 }

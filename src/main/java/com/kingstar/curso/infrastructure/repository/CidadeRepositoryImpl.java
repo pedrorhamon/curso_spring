@@ -12,7 +12,7 @@ import com.kingstar.curso.domain.entity.Cidade;
 import com.kingstar.curso.domain.repository.CidadeRepository;
 
 @Component
-public class CidadeRepositoryImpl implements CidadeRepository{
+public class CidadeRepositoryImpl implements CidadeRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -21,6 +21,7 @@ public class CidadeRepositoryImpl implements CidadeRepository{
 	public List<Cidade> listar() {
 		return manager.createQuery("from Cidade", Cidade.class).getResultList();
 	}
+
 	@Override
 	public Cidade buscar(Long id) {
 		return manager.find(Cidade.class, id);
@@ -30,10 +31,10 @@ public class CidadeRepositoryImpl implements CidadeRepository{
 	public Cidade salvar(Cidade cozinha) {
 		return manager.merge(cozinha);
 	}
-	
+
 	@Transactional
-	public void remover(Cidade cidade) {
-		cidade = buscar(cidade.getId());
+	public void remover(Long id) {
+		Cidade cidade = buscar(id);
 		manager.remove(cidade);
 	}
 }
