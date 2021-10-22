@@ -1,13 +1,9 @@
 package com.kingstar.curso.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kingstar.curso.domain.entity.Restaurante;
 
-public interface RestauranteRepository {
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
 	
-	List<Restaurante> listar();
-	Restaurante buscar(Long id);
-	Restaurante salvar(Restaurante restaurante);
-	void remover(Long id);
 }
