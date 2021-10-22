@@ -1,11 +1,10 @@
 package com.kingstar.curso.api.controller;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,17 +32,12 @@ public class EstadoController {
 	@Autowired
 	private CadastroEstadoService estadoService;
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Estado> listar() {
-		return estadoRepository.listar();
-	}
-
 	@GetMapping("/{estados}")
 	public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-		Estado cozinha = estadoRepository.buscar(estadoId);
+		Optional<Estado> cozinha = estadoRepository.findById(estadoId);
 
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		if (cozinha.isPresent()) {
+			return ResponseEntity.ok(cozinha.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -55,13 +49,13 @@ public class EstadoController {
 	}
 
 	@PutMapping("/estados/{id}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-		Estado estadoAtual = estadoRepository.buscar(estadoId);
+	public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
+		Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
 
-		if (estadoAtual != null) {
-			BeanUtils.copyProperties(estado, estadoAtual, "id");
+		if (estadoAtual.isPresent()) {
+			BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
 			
-			estadoAtual = estadoService.salvar(estadoAtual);
+			Estado estadoSalva = estadoService.salvar(estadoAtual.get());
 			return ResponseEntity.ok(estadoAtual);
 		}
 		return ResponseEntity.notFound().build();

@@ -1,11 +1,10 @@
 package com.kingstar.curso.api.controller;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,17 +32,13 @@ public class CidadeController {
 	@Autowired
 	private CadastroCidadeService cidadeService;
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Cidade> listar() {
-		return cidadeRepository.listar();
-	}
 
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-		Cidade cidade = cidadeRepository.buscar(cidadeId);
+		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
 
-		if (cidade != null) {
-			return ResponseEntity.ok(cidade);
+		if (cidade.isPresent()) {
+			return ResponseEntity.ok(cidade.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -55,13 +50,13 @@ public class CidadeController {
 	}
 
 	@PutMapping("/{cidadeId}")
-	public ResponseEntity<Cidade> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		Cidade cidadeAtual = cidadeRepository.buscar(cidadeId);
+	public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+		Optional<Cidade> cidadeAtual = cidadeRepository.findById(cidadeId);
 
-		if (cidadeAtual != null) {
-			BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+		if (cidadeAtual.isPresent()) {
+			BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
 			
-			cidadeAtual = cidadeService.salvar(cidadeAtual);
+			Cidade cidadeSalva = cidadeService.salvar(cidadeAtual.get());
 			return ResponseEntity.ok(cidadeAtual);
 		}
 		return ResponseEntity.notFound().build();
