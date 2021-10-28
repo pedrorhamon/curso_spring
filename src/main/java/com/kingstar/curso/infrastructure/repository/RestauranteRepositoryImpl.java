@@ -1,6 +1,7 @@
 package com.kingstar.curso.infrastructure.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.kingstar.curso.domain.entity.Restaurante;
 import com.kingstar.curso.domain.repository.RestauranteRepositoryQueries;
@@ -29,11 +31,18 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 		Root<Restaurante> root = criteria.from(Restaurante.class);
 		
-		Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
-		Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrente"), taxaFreteInicial);
-		Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrente"), taxaFreteFinal);
+		var predicates = new ArrayList<Predicate>();
+		if(StringUtils.hasText(nome)) {
+			predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+		}
+		if(taxaFreteInicial != null) {
+			Predicate taxaInicialPredicate = builder.greaterThanOrEqualTo(root.get("taxaFrente"), taxaFreteInicial);
+		}
+		if(taxaFreteFinal!= null) {
+			Predicate taxaFinalPredicate = builder.lessThanOrEqualTo(root.get("taxaFrente"), taxaFreteFinal);
+		}
 		
-		criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+		criteria.where(predicates.toArray(new Predicate[0]));
 		
 		TypedQuery<Restaurante> query = manager.createQuery(criteria);
 		return query.getResultList();
