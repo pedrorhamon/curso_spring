@@ -40,6 +40,7 @@ public class RestauranteController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+	
 
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
