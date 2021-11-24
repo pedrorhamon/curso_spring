@@ -28,5 +28,4 @@ public interface RestauranteRepository
 	
 	@Query("from Restaurante r join r.cozinha join fetch r.formasPagamento")
 	List<Restaurante> findAll();
-
 }
