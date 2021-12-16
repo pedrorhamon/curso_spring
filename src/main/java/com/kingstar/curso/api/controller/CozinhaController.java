@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.kingstar.curso.domain.entity.Cozinha;
-import com.kingstar.curso.domain.exception.EntidadeEmUsoException;
 import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
 import com.kingstar.curso.domain.repository.CozinhaRepository;
 import com.kingstar.curso.domain.service.CadastroCozinhaService;
