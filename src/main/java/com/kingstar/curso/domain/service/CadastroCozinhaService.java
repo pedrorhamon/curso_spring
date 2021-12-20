@@ -13,6 +13,8 @@ import com.kingstar.curso.domain.repository.CozinhaRepository;
 @Service
 public class CadastroCozinhaService {
 
+	private static final String MSG_ID_NAO_ENCONTRADO = "ID não foi encontrado";
+	private static final String MSG_NAO_EXISTE = "Não existe um cadastro de cozinha no código %d ";
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 
@@ -24,11 +26,17 @@ public class CadastroCozinhaService {
 		try {
 			cozinhaRepository.deleteById(cozinhaId);
 		} catch (EmptyResultDataAccessException e) {
+			String MSG_COZINHA_NAO_ENCONTRADA = MSG_NAO_EXISTE;
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de cozinha no código %d ", cozinhaId));
+					String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format("Cozinha de código %d não pode ser removida, pois está em uso", cozinhaId));
 		}
+	}
+	
+	public Cozinha buscarFalha(Long cozinhaId) {
+		return cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(MSG_ID_NAO_ENCONTRADO));
 	}
 }
