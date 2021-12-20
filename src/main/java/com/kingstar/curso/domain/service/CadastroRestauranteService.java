@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.kingstar.curso.domain.entity.Cozinha;
+import com.kingstar.curso.domain.entity.Estado;
 import com.kingstar.curso.domain.entity.Restaurante;
 import com.kingstar.curso.domain.exception.EntidadeEmUsoException;
 import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
@@ -44,6 +45,11 @@ public class CadastroRestauranteService {
 			throw new EntidadeEmUsoException(
 					String.format("Restaurante de código %d não pode ser removida, pois está em uso", restauranteId));
 		}
+	}
+	
+	public Restaurante buscarFalha(Long restauranteId) {
+		return restauranteRepository.findById(restauranteId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("ID não foi encontrado"));
 	}
 }
 
