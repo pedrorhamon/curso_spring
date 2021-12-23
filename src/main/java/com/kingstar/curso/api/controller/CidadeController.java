@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingstar.curso.domain.entity.Cidade;
+import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
+import com.kingstar.curso.domain.exception.NegocioException;
 import com.kingstar.curso.domain.repository.CidadeRepository;
 import com.kingstar.curso.domain.service.CadastroCidadeService;
 
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
-
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -36,15 +37,25 @@ public class CidadeController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
+		try {
 		return cidadeService.salvar(cidade);
+		} catch( EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{cidadeId}")
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cidadeService.buscarFalha(cidadeId);
-		
-		BeanUtils.copyProperties(cidade, cidadeAtual,"id");
-		return cidadeService.salvar(cidadeAtual);
+
+		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+
+		try {
+			return cidadeService.salvar(cidadeAtual);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@DeleteMapping("/{CidadeId}")
