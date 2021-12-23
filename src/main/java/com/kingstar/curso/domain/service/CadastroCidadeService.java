@@ -14,6 +14,8 @@ import com.kingstar.curso.domain.repository.CidadeRepository;
 @Service
 public class CadastroCidadeService {
 	
+	private static final String MSG_ID_NÃO_FOI_ENCONTRADO = "ID não foi encontrado";
+	private static final String MSG_CIDADE_DE_CÓDIGO_D_NÃO_PODE_SER_REMOVIDA = "Cidade de código %d não pode ser removida, pois está em uso";
 	private static final String MSG_NÃO_EXISTE_UM_CADASTRO = "Não existe um cadastro de cozinha no código %d ";
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -30,12 +32,12 @@ public class CadastroCidadeService {
 					String.format(MSG_NÃO_EXISTE_UM_CADASTRO, cidadeId));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Cidade de código %d não pode ser removida, pois está em uso", cidadeId));
+					String.format(MSG_CIDADE_DE_CÓDIGO_D_NÃO_PODE_SER_REMOVIDA, cidadeId));
 		}
 	}
 	
 	public Cidade buscarFalha(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("ID não foi encontrado"));
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(MSG_ID_NÃO_FOI_ENCONTRADO));
 	}
 }

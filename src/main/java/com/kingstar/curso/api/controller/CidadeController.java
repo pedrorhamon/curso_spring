@@ -38,8 +38,8 @@ public class CidadeController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
 		try {
-		return cidadeService.salvar(cidade);
-		} catch( EntidadeNaoEncontradaException e) {
+			return cidadeService.salvar(cidade);
+		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -48,9 +48,7 @@ public class CidadeController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cidadeService.buscarFalha(cidadeId);
-
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
 		try {
 			return cidadeService.salvar(cidadeAtual);
 		} catch (EntidadeNaoEncontradaException e) {

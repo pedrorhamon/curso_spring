@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kingstar.curso.domain.entity.Restaurante;
+import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
+import com.kingstar.curso.domain.exception.NegocioException;
 import com.kingstar.curso.domain.repository.RestauranteRepository;
 import com.kingstar.curso.domain.service.CadastroRestauranteService;
 
@@ -29,22 +31,29 @@ public class RestauranteController {
 
 	@GetMapping("/{restauranteId}")
 	public Restaurante buscar(@PathVariable Long restauranteId) {
-		return  restauranteService.buscarFalha(restauranteId);
+		return restauranteService.buscarFalha(restauranteId);
 	}
-	
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+
+		try {
 			return restauranteService.salvar(restaurante);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/restaurantes/{id}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 		Restaurante restauranteAtual = restauranteService.buscarFalha(restauranteId);
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-
-		return restauranteService.salvar(restauranteAtual);
+		try {
+			return restauranteService.salvar(restauranteAtual);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@DeleteMapping("/{restauranteId}")
