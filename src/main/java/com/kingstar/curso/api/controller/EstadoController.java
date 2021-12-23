@@ -1,5 +1,6 @@
 package com.kingstar.curso.api.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +41,8 @@ public class EstadoController {
 	@PutMapping("/estados/{id}")
 	public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
 		Estado estadoAtual = estadoService.buscarFalha(estadoId);
+		BeanUtils.copyProperties(estado, estadoAtual, "id");
+
 			return estadoService.salvar(estadoAtual);
 	}
 

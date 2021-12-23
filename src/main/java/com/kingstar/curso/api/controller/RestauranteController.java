@@ -1,5 +1,6 @@
 package com.kingstar.curso.api.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,8 @@ public class RestauranteController {
 	@PutMapping("/restaurantes/{id}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 		Restaurante restauranteAtual = restauranteService.buscarFalha(restauranteId);
+		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+
 		return restauranteService.salvar(restauranteAtual);
 	}
 
