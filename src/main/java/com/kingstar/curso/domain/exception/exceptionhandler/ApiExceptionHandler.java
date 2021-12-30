@@ -43,4 +43,14 @@ public class ApiExceptionHandler {
 		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
 				.body(problema);	
 	}
+	
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	public ResponseEntity<?> EntidadeNaoEncontradaException(){
+		Problema problema = Problema.builder()
+				.dataHora(LocalDateTime.now())
+				.msg("Ah um conflito").build();
+	
+		return ResponseEntity.status(HttpStatus.CONFLICT)
+				.body(problema);
+	}
 }
