@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.kingstar.curso.domain.exception.EntidadeEmUsoException;
 import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
 import com.kingstar.curso.domain.exception.NegocioException;
 
@@ -27,8 +28,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	}
 
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleExceptionInternal(NegocioException e, WebRequest resquest){
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, resquest);
+	public ResponseEntity<?> handleExceptionInternalNegocio(NegocioException e, WebRequest resquest){
+		
+		HttpStatus status = HttpStatus.CONFLICT;
+		ProblemType problemType = ProblemType.NEGOCIO;
+		String detail = e.getMessage();
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(e, problem, new HttpHeaders(), status, resquest);
+	}
+	
+	@ExceptionHandler(EntidadeEmUsoException.class)
+	public ResponseEntity<?> handleExceptionInternalEmUso(EntidadeEmUsoException e, WebRequest resquest){
+		
+		HttpStatus status = HttpStatus.CONFLICT;
+		ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
+		String detail = e.getMessage();
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(e, problem, new HttpHeaders(), status, resquest);
 	}
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
