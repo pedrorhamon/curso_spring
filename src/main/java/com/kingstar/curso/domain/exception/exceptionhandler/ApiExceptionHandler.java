@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.kingstar.curso.domain.exception.EntidadeEmUsoException;
 import com.kingstar.curso.domain.exception.EntidadeNaoEncontradaException;
@@ -92,6 +93,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, resquest);
 	}
 	
+	@ExceptionHandler(IgnoredPropertyException.class)
+	public ResponseEntity<?> handleExceptionInternalIgnore(IgnoredPropertyException e, WebRequest resquest, HttpHeaders headers){
+		Throwable rootCause = ExceptionUtils.getRootCause(e);
+		
+		HttpStatus status = HttpStatus.CONFLICT;
+		
+		if(rootCause instanceof InvalidFormatException) {
+			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, resquest);
+		}
+	
+		ProblemType problemType = ProblemType.CORPO_INCOMPREENSIVEL;
+		String detail = "O corpo da requisição está inválido ";
+		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(e, problem, new HttpHeaders(), status, resquest);
+	}
+	
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 		if (body == null) {
@@ -113,7 +131,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.status(status.value())
 				.type(problemType.getUri())
 				.title(problemType.getTitle())
-				.detail(detail);
-		
+				.detail(detail);	
 	}
 }
