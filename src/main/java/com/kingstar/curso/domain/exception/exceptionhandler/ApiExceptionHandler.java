@@ -22,6 +22,10 @@ import com.kingstar.curso.domain.exception.NegocioException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
+	private static final String MENSAGEM_CONFLIT = "A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido. "
+			+ "Corrija e informe um valor compatível com"
+			+ "o tipo %s.";
+
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -46,9 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.collect(Collectors.joining("."));
 	
 		ProblemType problemType = ProblemType.CORPO_INCOMPREENSIVEL;
-		String detail = String.format("A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido. "
-				+ "Corrija e informe um valor compatível com"
-				+ "o tipo %s.", path,ex.getValue(), ex.getTargetType().getSimpleName());
+		String detail = String.format(MENSAGEM_CONFLIT, path,ex.getValue(), ex.getTargetType().getSimpleName());
 		
 		Problem problem = createProblemBuilder(status, problemType, detail).build();
 
@@ -83,7 +85,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		HttpStatus status = HttpStatus.CONFLICT;
 		ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
 		String detail = e.getMessage();
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail).userMessage(detail).build();
 		
 		return handleExceptionInternal(e, problem, new HttpHeaders(), status, resquest);
 	}
@@ -104,8 +106,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		}
 	
 		ProblemType problemType = ProblemType.CORPO_INCOMPREENSIVEL;
-		String detail = "O corpo da requisição está inválido ";
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		 String detail = String.format(MENSAGEM_CONFLIT);
+		Problem problem = createProblemBuilder(status, problemType, detail).userMessage(detail).build();
 		
 		return handleExceptionInternal(e, problem, new HttpHeaders(), status, resquest);
 	}
