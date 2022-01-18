@@ -34,7 +34,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		if(rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
 		}
-	
+			
 		ProblemType problemType = ProblemType.CORPO_INCOMPREENSIVEL;
 		String detail = "O corpo da requisição está inválido ";
 		Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -125,6 +125,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					.status(status.value())
 					.build();
 		}
+		
+		
 		return new ResponseEntity<>(body, headers, status);
 	}
 	
