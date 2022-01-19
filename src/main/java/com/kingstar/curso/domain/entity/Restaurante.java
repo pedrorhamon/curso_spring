@@ -43,6 +43,7 @@ public class Restaurante {
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
+	@NotNull
 	private Cozinha cozinha;
 	
 	@Embedded
