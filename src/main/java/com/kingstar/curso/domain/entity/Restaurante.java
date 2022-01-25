@@ -38,8 +38,8 @@ public class Restaurante {
 	private String nome;
 
 	@NotNull
-	@Column(name = "taxa_frente", nullable = false)
-	private BigDecimal taxaFrente;
+	@Column(name = "taxa_frete", nullable = false)
+	private BigDecimal taxaFrete;
 	
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
